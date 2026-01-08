@@ -20,7 +20,7 @@
         const FORMSPREE_ID = 'xgovgedw'; // Replace with your actual ID!
         
         // Google Sheets Apps Script Web App URL
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwJcVxvBJ8sn8BIyAeNbR5wtdwe8Iw2PmlZQXFZboqbEqtybmBzfQkW2DicUgQuvYrenQ/exec';
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwVr0yM3KnWKCR7Ufv28GX6hzDHaeMQu79PVli-W699rKiRsbx6y6GTEyKOlEE3qHltLw/exec';
 
         function App() {
           const [page, setPage] = useState('home');
@@ -197,20 +197,55 @@
                     
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                       {[
-                        { title: 'Private Lessons', time: '30-60 min', desc: 'Personalized instruction for beginner and intermediate levels.' },
-                        { title: 'Group Lessons', time: '30-60 min', desc: 'Learn with peers in small classes of 2-5 students.' },
-                        { title: 'Music Theory', time: '60 min', desc: 'Deep dive into theory, composition, and arrangement.' },
-                        { title: 'Performance Training', time: 'Flexible', desc: 'Prepare for recitals, auditions, and competitions.' }
+                        { 
+                          title: 'Private Lessons', 
+                          time: '30-60 min', 
+                          desc: 'Personalized instruction for beginner and intermediate levels.',
+                          hoverTitle: 'One-on-One Music Instruction',
+                          hoverDesc: 'Work directly with expert instructors who tailor each lesson to your pace and goals. Perfect for focused learning and rapid progress.'
+                        },
+                        { 
+                          title: 'Group Lessons', 
+                          time: '30-60 min', 
+                          desc: 'Learn with peers in small classes of 2-5 students.',
+                          hoverTitle: 'Collaborative Learning Experience',
+                          hoverDesc: 'Build musicianship alongside peers in intimate group settings. Develop ensemble skills while enjoying the social aspect of music education.'
+                        },
+                        { 
+                          title: 'Music Theory', 
+                          time: '60 min', 
+                          desc: 'Deep dive into theory, composition, and arrangement.',
+                          hoverTitle: 'Master the Language of Music',
+                          hoverDesc: 'Understand the fundamentals that make music work. From reading notation to composing your own pieces, unlock the theory behind the melodies.'
+                        },
+                        { 
+                          title: 'Performance Training', 
+                          time: 'Flexible', 
+                          desc: 'Prepare for recitals, auditions, and competitions.',
+                          hoverTitle: 'Stage-Ready Preparation',
+                          hoverDesc: 'Build confidence and polish your performance skills. Get expert coaching for auditions, recitals, competitions, and special events.'
+                        }
                       ].map((prog, i) => (
-                        <div key={i} className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow">
-                          <div className="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center text-blue-600 mb-4">
-                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                            </svg>
+                        <div key={i} className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 relative overflow-hidden group cursor-pointer">
+                          {/* Default Content */}
+                          <div className="transition-opacity duration-300 group-hover:opacity-0">
+                            <div className="bg-blue-50 w-14 h-14 rounded-lg flex items-center justify-center text-blue-600 mb-4">
+                              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                              </svg>
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 mb-2">{prog.title}</h3>
+                            <p className="text-slate-600 text-sm mb-3">⏱️ {prog.time} lessons</p>
+                            <p className="text-slate-600 leading-relaxed">{prog.desc}</p>
                           </div>
-                          <h3 className="text-xl font-bold text-slate-900 mb-2">{prog.title}</h3>
-                          <p className="text-slate-600 text-sm mb-3">⏱️ {prog.time} lessons</p>
-                          <p className="text-slate-600 leading-relaxed">{prog.desc}</p>
+                          
+                          {/* Hover Content */}
+                          <div className="absolute inset-0 p-6 bg-gradient-to-br from-blue-600 to-blue-700 text-white flex flex-col justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p className="text-xs uppercase tracking-wide mb-2 text-blue-100">Music Program</p>
+                            <h3 className="text-xl font-bold mb-3">{prog.hoverTitle}</h3>
+                            <p className="text-sm leading-relaxed text-blue-50">{prog.hoverDesc}</p>
+                            <div className="mt-4 text-xs text-blue-100">⏱️ {prog.time} lessons</div>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -473,5 +508,3 @@
     </script>
 </body>
 </html>
-
-
