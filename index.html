@@ -18,10 +18,20 @@
 
         // ⬇️ PASTE YOUR FORMSPREE ID HERE ⬇️
         const FORMSPREE_ID = 'xgovgedw'; // Replace with your actual ID!
+        
+        // Google Sheets Apps Script Web App URL
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwVr0yM3KnWKCR7Ufv28GX6hzDHaeMQu79PVli-W699rKiRsbx6y6GTEyKOlEE3qHltLw/exec';
 
         function App() {
           const [page, setPage] = useState('home');
           const [isSubmitting, setIsSubmitting] = useState(false);
+          const [isContactSubmitting, setIsContactSubmitting] = useState(false);
+          const [contactForm, setContactForm] = useState({
+            name: '',
+            email: '',
+            phone: '',
+            message: ''
+          });
           const programsRef = useRef(null);
           const facultyRef = useRef(null);
           const contactRef = useRef(null);
@@ -77,6 +87,46 @@
               alert('Something went wrong. Please try again or call us at (919) 579-8649');
             } finally {
               setIsSubmitting(false);
+            }
+          };
+
+          const handleContactSubmit = async () => {
+            // Validate form
+            if (!contactForm.name || !contactForm.email || !contactForm.phone) {
+              alert('Please fill in all required fields (name, email, and phone)');
+              return;
+            }
+
+            setIsContactSubmitting(true);
+
+            try {
+              const formData = new FormData();
+              formData.append('name', contactForm.name);
+              formData.append('email', contactForm.email);
+              formData.append('phone', contactForm.phone);
+              formData.append('message', contactForm.message);
+
+              const response = await fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors' // Google Apps Script requires no-cors mode
+              });
+
+              // With no-cors, we can't read the response, but if no error was thrown, it likely succeeded
+              alert('Message sent successfully! We\'ll get back to you soon.');
+              
+              // Clear form
+              setContactForm({
+                name: '',
+                email: '',
+                phone: '',
+                message: ''
+              });
+            } catch (error) {
+              console.error('Error submitting form:', error);
+              alert('Something went wrong. Please try again or call us at (919) 579-8649');
+            } finally {
+              setIsContactSubmitting(false);
             }
           };
 
@@ -219,12 +269,40 @@
                     <div className="bg-white rounded-2xl shadow-lg p-8">
                       <h3 className="text-2xl font-bold text-slate-900 mb-6">Request Information</h3>
                       <div className="space-y-4">
-                        <input type="text" placeholder="Your name" className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
-                        <input type="email" placeholder="your@email.com" className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
-                        <input type="tel" placeholder="(555) 555-5555" className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
-                        <textarea placeholder="Your message..." rows="4" className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
-                        <button onClick={() => alert('Message sent!')} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors">
-                          Send Message
+                        <input 
+                          type="text" 
+                          placeholder="Your name *" 
+                          value={contactForm.name}
+                          onChange={(e) => setContactForm({...contactForm, name: e.target.value})}
+                          className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" 
+                        />
+                        <input 
+                          type="email" 
+                          placeholder="your@email.com *" 
+                          value={contactForm.email}
+                          onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
+                          className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" 
+                        />
+                        <input 
+                          type="tel" 
+                          placeholder="(555) 555-5555 *" 
+                          value={contactForm.phone}
+                          onChange={(e) => setContactForm({...contactForm, phone: e.target.value})}
+                          className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" 
+                        />
+                        <textarea 
+                          placeholder="Your message..." 
+                          rows="4" 
+                          value={contactForm.message}
+                          onChange={(e) => setContactForm({...contactForm, message: e.target.value})}
+                          className="w-full px-4 py-3 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 resize-none" 
+                        />
+                        <button 
+                          onClick={handleContactSubmit} 
+                          disabled={isContactSubmitting}
+                          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 rounded-lg transition-colors"
+                        >
+                          {isContactSubmitting ? 'Sending...' : 'Send Message'}
                         </button>
                       </div>
                     </div>
@@ -395,6 +473,3 @@
     </script>
 </body>
 </html>
-
-
-
